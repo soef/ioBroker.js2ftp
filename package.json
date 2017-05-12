@@ -1,0 +1,46 @@
+{
+  "name": "iobroker.js2ftp",
+  "version": "0.0.27",
+  "description": "ioBroker Javascript to FTP",
+  "author": {
+    "name": "soef",
+    "email": "soef@gmx.net"
+  },
+  "contributors": [
+    {
+      "name": "soef",
+      "email": "soef@gmx.net"
+    }
+  ],
+  "homepage": "https://github.com/soef/iobroker.js2ftp",
+  "license": "MIT",
+  "keywords": [
+    "sync",
+    "iobroker ftp",
+    "JetBrains",
+    "webstorm",
+    "ftp",
+    "debug",
+    "editor",
+    "ide"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soef/iobroker.js2ftp"
+  },
+  "dependencies": {
+    "soef": "^0.1.46"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.4",
+    "chai": "^3.4.1"
+  },
+  "main": "js2ftp.js",
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha"
+  },
+  "bugs": {
+    "url": "https://github.com/soef/iobroker.js2ftp/issues"
+  },
+  "readmeFilename": "README.md"
+}

@@ -1,0 +1,41 @@
+{
+  "common": {
+    "name": "js2ftp",
+    "version": "0.0.1",
+    "title": "Javascript to FTP",
+    "desc": "Javascript to FTP",
+    "platform": "Javascript/Node.js",
+    "news": {
+      "0.0.1": {
+        "en": "Initial commit",
+        "de": "Erstveröffentlichung"
+      }
+    },
+    "keywords": [
+      "sync",
+      "iobroker ftp",
+      "JetBrains",
+      "webstorm",
+      "ftp",
+      "debug",
+      "editor",
+      "ide"
+    ],
+    "mode": "daemon",
+    "icon": "js2ftp.png",
+    "extIcon": "https://raw.githubusercontent.com/soef/iobroker.js2ftp/master/admin/js2ftp.png",
+    "readme": "https://github.com/soef/iobroker.js2ftp/blob/master/README.md",
+    "loglevel": "info",
+    "type": "hardware",
+    "enabled": true,
+    "messagebox": true
+  },
+  "native": {
+    "port": 21,
+    "useGlobalScriptAsPrefix": true,
+    "restartScript": true,
+    "disableWrite": false
+  },
+  "objects": [
+  ]
+}
