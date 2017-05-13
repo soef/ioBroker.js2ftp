@@ -1,11 +1,15 @@
 {
   "common": {
     "name": "js2ftp",
-    "version": "0.0.1",
+    "version": "0.0.28",
     "title": "Javascript to FTP",
     "desc": "Javascript to FTP",
     "platform": "Javascript/Node.js",
     "news": {
+      "0.0.28": {
+        "en": "ftpd added to dependencies",
+        "de": "fdpd zu den dependencies hinzugefügt"
+      },
       "0.0.1": {
         "en": "Initial commit",
         "de": "Erstveröffentlichung"

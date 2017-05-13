@@ -334,7 +334,7 @@ function normalizeConfig(config) {
 
 function main() {
     
-    normalizeConsig(adapter.config);
+    normalizeConfig(adapter.config);
 
     scripts = Scripts();
     scripts.read(function () {
