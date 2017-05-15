@@ -1,6 +1,6 @@
 {
   "name": "iobroker.js2ftp",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "description": "ioBroker Javascript to FTP",
   "author": {
     "name": "soef",
@@ -24,12 +24,17 @@
     "editor",
     "ide"
   ],
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/soef/iobroker.js2ftp"
   },
   "dependencies": {
+    "child_process": "^1.0.2",
     "ftpd": "^0.2.15",
+    "ip": "^1.1.5",
     "soef": "^0.1.46"
   },
   "devDependencies": {

@@ -2,6 +2,8 @@
 
 var soef = require('soef'),
     path = require('path'),
+    child_process = require('child_process'),
+    ip = require ('ip'),
     FTPServer = require('ftpd').FtpServer;
 
 // var config = {
@@ -176,7 +178,7 @@ var Scripts = function () {
 
 var startServer = function () {
     
-    var ip = require ('ip');
+    //var ip = require ('ip');
     var address = ip.address ();
     var server = new FTPServer (address, {
         getInitialCwd: function () {
@@ -331,20 +333,106 @@ function normalizeConfig(config) {
     if (config.disableWrite === undefined) config.disableWrite = false;
 }
 
+function spawn(exe, command, onLine, callback) {
+    var args = command.split (' ');
+    var node = child_process.spawn (exe, args);
+    
+    function action (device, data) {
+        if (!callback) return;
+        if (typeof data !== 'string') data = data.toString ();
+        data.replace (/\r\n/g, '\n').split ('\n').forEach (function (line) {
+            var ret = onLine (device, data.replace (/[\r|\n]*$/, ''));
+            if (ret !== undefined) {
+                if (ret !== false) callback && callback (ret);
+                callback = null;
+            }
+        });
+    }
+    node.stdout.on ('data', action.bind(1, 'stdout'));
+    node.stderr.on ('data', action.bind(1, 'stderr'));
+    node.on ('close', function(code) {
+        callback && callback(code, 'close');
+        callback = null;
+    });
+    return node;
+}
+
+function startJavascriptAdapterInDebugMode(callback) {
+    var nodeModulesPath = __dirname.replace(/\\/g, '/').replace(/([^\/]*?)$/, '');
+    var nodeExe = process.argv[0] || 'node';
+    var args = '--harmony --debug --expose_debug_as=v8debug ' + nodeModulesPath + 'iobroker.javascript/javascript.js --force';
+    var node = spawn(nodeExe, args,
+        function onLine (device, line) {
+            var ar = /^Debugger listening on \[\:\:\]\:([0-9]+)/.exec(line);
+            adapter.log.info(device + ': ' + line);
+            if (ar && ar.length >= 2) {
+                adapter.log.info('port: ' + ar[1]);
+                return ~~ar[1];
+            }
+        },
+        callback
+    );
+}
+
+
+function checkRunnningInDebugmode(callback) {
+    var execCmd = 'Get-WmiObject Win32_Process -Filter "name=\'node.exe\'"|Select-Object CommandLine';
+    var setBufferSize = '$pshost=get-host;$pswindow=$pshost.ui.rawui;$newsize=$pswindow.buffersize;$newsize.height=3000;$newsize.width=200;$pswindow.buffersize=$newsize;';
+    var args = (setBufferSize + execCmd).split(' ');
+    var node = child_process.spawn('powershell', args);
+    node.stdout.on('data', function (data) {
+        if (!callback) return;
+        if (typeof data !== 'string') data = data.toString();
+        data = data.replace(/[\r|\n]*$/, '').replace(/\r\n/g, '\n');
+        data.split('\n').forEach(function (line) {
+            adapter.log.debug(line.slice(0, -1));
+            if (/^.*--debug --expose.*iobroker.javascript\/javascript\.js --force/.test(line)) {
+                callback && callback(true);
+                callback = null;
+                return;
+            }
+        });
+    });
+    
+    node.stderr.on('data', function (data) {
+        if (typeof data !== 'string') data = data.toString();
+        data = data.replace(/[\r|\n]*$/, '');
+        var ar = data.split('\r\n');
+    });
+    
+    node.on('close', function (code) {
+        callback && callback(false);
+        callback = null;
+    });
+}
+
+function stopJavascriptAdapter (callback) {
+    soef.modifyObject ('system.adapter.javascript.0', { common: { enabled: false }},function(err, obj) {
+        callback && callback(err, obj);
+    });
+}
+
+function checkJavascriptAdapter(callback) {
+    checkRunnningInDebugmode(function(isDebug) {
+        if (isDebug) return callback && callback('already running in debug mode');
+        stopJavascriptAdapter(function(err,obj) {
+            startJavascriptAdapterInDebugMode(callback);
+        })
+    });
+}
+
 
 function main() {
     
-    normalizeConfig(adapter.config);
-
-    scripts = Scripts();
-    scripts.read(function () {
-        startServer();
-    });
-
-    //normalizeConfig();
-    
-    adapter.subscribeStates('*');
-    //adapter.subscribeObjects('*');
-    adapter.subscribeForeignObjects('*');
+    normalizeConfig (adapter.config);
+    //checkJavascriptAdapter(function (runningPort) {
+        scripts = Scripts ();
+        scripts.read (function () {
+            startServer ();
+        });
+        adapter.subscribeStates ('*');
+        //adapter.subscribeObjects('*');
+        adapter.subscribeForeignObjects ('*');
+    //});
 }
 
