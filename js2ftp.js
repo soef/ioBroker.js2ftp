@@ -323,8 +323,14 @@ var startServer = function () {
             adapter.log.error ('remoteClient %s had an error: %s', remoteClient, error.toString ());
         });
     });
-
-    server.listen (adapter.config.port);
+    server.on('error', function(error) {
+        console.log("server.on('error')");
+    });
+    try {
+        server.listen (adapter.config.port);
+    } catch(e) {
+        console.log('catch: ' + e);
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
