@@ -178,7 +178,6 @@ var Scripts = function () {
 
 var startServer = function () {
     
-    //var ip = require ('ip');
     var address = ip.address ();
     var server = new FTPServer (address, {
         getInitialCwd: function () {
@@ -326,13 +325,6 @@ var startServer = function () {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function normalizeConfig(config) {
-    if (config.port === undefined) config.port = 21;
-    if (config.useGlobalScriptAsPrefix === undefined) config.useGlobalScriptAsPrefix = true;
-    if (config.restartScript === undefined) config.restartScript = true;
-    if (config.disableWrite === undefined) config.disableWrite = false;
-}
-
 function spawn(exe, command, onLine, callback) {
     var args = command.split (' ');
     var node = child_process.spawn (exe, args);
@@ -421,14 +413,23 @@ function checkJavascriptAdapter(callback) {
     });
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function normalizeConfig(config) {
+    if (config.port === undefined) config.port = 21;
+    if (config.useGlobalScriptAsPrefix === undefined) config.useGlobalScriptAsPrefix = true;
+    if (config.restartScript === undefined) config.restartScript = true;
+    if (config.disableWrite === undefined) config.disableWrite = false;
+}
 
 function main() {
     
     normalizeConfig (adapter.config);
+    adapter.config = { port: 21 };
     //checkJavascriptAdapter(function (runningPort) {
         scripts = Scripts ();
         scripts.read (function () {
-            startServer ();
+            //startServer ();
         });
         adapter.subscribeStates ('*');
         //adapter.subscribeObjects('*');
