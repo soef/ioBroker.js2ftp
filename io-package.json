@@ -6,6 +6,10 @@
     "desc": "Javascript to FTP",
     "platform": "Javascript/Node.js",
     "news": {
+      "0.0.30": {
+        "en": "possible exception chatched",
+        "de": "Mögliche Schutzverletzung abgefangen"
+      },
       "0.0.29": {
         "en": "ip added to dependencies",
         "de": "ip zu den dependencies hinzugefügt"

@@ -1,6 +1,6 @@
 {
   "name": "iobroker.js2ftp",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "description": "ioBroker Javascript to FTP",
   "author": {
     "name": "soef",

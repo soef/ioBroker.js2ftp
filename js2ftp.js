@@ -179,10 +179,6 @@ var Scripts = function () {
 var startServer = function () {
     
     var address = ip.address ();
-    console.log('startServer: address=' + address);
-    if (!address || address === '0.0.0.0') {
-        return;
-    }
     var server = new FTPServer (address, {
         getInitialCwd: function () {
             return '';
@@ -324,12 +320,12 @@ var startServer = function () {
         });
     });
     server.on('error', function(error) {
-        console.log("server.on('error')");
+        adapter.log.error("server.on('error'): " + error.message);
     });
     try {
         server.listen (adapter.config.port);
     } catch(e) {
-        console.log('catch: ' + e);
+        adapter.log.error('catch: ' + e);
     }
 };
 
