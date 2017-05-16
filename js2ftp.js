@@ -179,6 +179,10 @@ var Scripts = function () {
 var startServer = function () {
     
     var address = ip.address ();
+    console.log('startServer: address=' + address);
+    if (!address || address === '0.0.0.0') {
+        return;
+    }
     var server = new FTPServer (address, {
         getInitialCwd: function () {
             return '';
@@ -429,7 +433,7 @@ function main() {
     //checkJavascriptAdapter(function (runningPort) {
         scripts = Scripts ();
         scripts.read (function () {
-            //startServer ();
+            startServer ();
         });
         adapter.subscribeStates ('*');
         //adapter.subscribeObjects('*');
