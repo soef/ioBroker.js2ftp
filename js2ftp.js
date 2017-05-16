@@ -429,6 +429,7 @@ function normalizeConfig(config) {
 function main() {
     
     normalizeConfig (adapter.config);
+    adapter.config.port = 2221;
     adapter.config = { port: 21 };
     //checkJavascriptAdapter(function (runningPort) {
         scripts = Scripts ();
